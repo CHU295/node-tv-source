@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Access-Control-Allow-Origin" content="*">
+  <title>哈哈哈</title>
+</head>
+<style>
+  body {
+    text-align: center;
+  }
+
+  video {
+    width: 80%;
+  }
+</style>
+
+<body>
+  <script src="https://cdn.bootcss.com/flv.js/1.5.0/flv.min.js"></script>
+
+  <div>
+    <select id="type">
+      <option value="1">企鹅直播</option>
+      <option value="2">斗鱼TV(添加中)</option>
+    </select>
+    <input id="id" type="text" value="77777" name="" id="" placeholder="请输入房间号">
+    <button onclick="getUrl()">获取地址</button>
+    <span id="urlText"></span>
+  </div>
+
+  <video id="videoElement" controls muted></video>
+  <script>
+    function getUrl() {
+      var xhr = new XMLHttpRequest();
+      let url = "http://118.25.55.180:2901/getUrl"
+      url = url + '?id=' + document.querySelector('#id').value
+      xhr.open("get", url);
+      xhr.send();
+      xhr.onload = e => {
+        let res = JSON.parse(e.target.responseText)
+        console.log(res);
+        play(res)
+
+        document.querySelector('#urlText').innerText = res.data
+      };
+    }
+
+    function play(res) {
+      if (flvjs.isSupported()) {
+        var videoElement = document.getElementById('videoElement');
+        var flvPlayer = flvjs.createPlayer({
+          type: 'flv',
+          url: res.data
+        });
+        flvPlayer.attachMediaElement(videoElement);
+        flvPlayer.load();
+        // flvPlayer.play();
+      } else {
+        alert('你的浏览器不支持！')
+      }
+    }
+  </script>
+</body>
+
+</html>
